@@ -18,11 +18,11 @@ namespace ImageRecoder
                 Console.WriteLine("2 - Takes the picture and saves it to raw BMP HEX, removing all the sensitive information stored in a file");
                 Console.WriteLine();
                 Console.WriteLine("Metas:");
-                Console.WriteLine("1 - 1/5 colour obfuscation to remove a bit of hidden contents.");
-                Console.WriteLine("2 - 1/10 colour obfuscation to remove some of hidden contents.");
-                Console.WriteLine("3 - 1/20 colour obfuscation to remove most of hidden contents.");
-                Console.WriteLine("4 - 1/40 colour obfuscation to remove hidden contents at the cost of bad quality.");
-                Console.WriteLine("5 - 1/80 color obfuscation. You can't be serious. Hope they dont find you.");
+                Console.WriteLine("1 - 1/5 colour equalization to remove a bit of hidden contents.");
+                Console.WriteLine("2 - 1/10 colour equalization to remove some of hidden contents.");
+                Console.WriteLine("3 - 1/20 colour equalization to remove most of hidden contents.");
+                Console.WriteLine("4 - 1/40 colour equalization to remove hidden contents at the cost of bad quality.");
+                Console.WriteLine("5 - 1/80 color equalization. You can't be serious. Hope they dont find you.");
             } else
             {
                 Console.WriteLine("Started...");
