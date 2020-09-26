@@ -46,6 +46,30 @@ Colour equalization is NOT guaranteed to make a picture unrecognizabl to Google 
 
 Trackers CAN be hidden inside second type raw BMP file using a technique described in [imageEncryptor](https://github.com/kolya5544/imageEncryptor), but the program does remove those as well.
 
+## Agreement
+
+Agreement is a program designed to provide a secure chat over any social network or IRC chat. It works by establishing a common key using Diffie-Hellman method.
+
+### Usage
+
+Send a program to your friend. One of you should start the program as sender, the other side should be the receiver.
+
+If you are sender, send first and second text contents, telling the friend it's first or second `public`. Send the third text box content, telling the friend it's your `mix`. Ask your friend to insert `public` values in his textboxes accordingly. Ask your friend what's his `mix` and enter it on your side.
+
+If you are the receiver, ask your friend for first and second public and insert them accordingly. Send your `mix` to a friend, and also ask him for his `mix` and insert it accordingly.
+
+Both of you should now press `Confirm and process` button. Your key and a checksum will appear. You can send the checksum to your friend. If they match, the key is valid.
+
+### Notes
+
+Recommended keylength is no less than 2048 bits, but if the chat you use doesn't allow long messages, you can try lowering the value.
+
+Keylength only affects the sending side. Receiving side works with any keylength.
+
+`Checksum` is the text you use to check if the common key is correct. You can find it under `If this string matches with the one your opponent got, your key is correct`.
+
+Never send or show anyone a `key to encrypt messages`. It may be used by anyone to decrypt the messages you sent.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
