@@ -24,7 +24,7 @@ namespace ImageRecoder
                 Console.WriteLine("4 - 1/40 colour equalization to remove hidden contents at the cost of bad quality.");
                 Console.WriteLine("5 - 1/80 color equalization. You can't be serious. Hope they dont find you.");
                 Console.WriteLine();
-                Console.WriteLine("Program source code: https://github.com/kolya5544/FreeNet/ImageRecoder");
+                Console.WriteLine("Program source code: https://github.com/kolya5544/FreeNet/tree/master/ImageRecoder");
             } else
             {
                 Console.WriteLine("Started...");
