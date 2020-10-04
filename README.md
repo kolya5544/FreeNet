@@ -70,9 +70,5 @@ Keylength only affects the sending side. Receiving side works with any keylength
 
 Never send or show anyone a `key to encrypt messages`. It may be used by anyone to decrypt the messages you sent.
 
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
 ## License
 [AGPL-3.0 License](https://github.com/kolya5544/FreeNet/blob/master/LICENSE)
