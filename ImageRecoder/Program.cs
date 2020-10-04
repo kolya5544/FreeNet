@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommandLine;
+using CommandLine.Text;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -9,56 +11,53 @@ namespace ImageRecoder
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Usage: program.exe <input> <output> <type> [meta]");
-                Console.WriteLine();
-                Console.WriteLine("Types:");
-                Console.WriteLine("1 - Takes the picture and saves it, removing most of metadata or byte hidden contents.");
-                Console.WriteLine("2 - Takes the picture and saves it to raw BMP HEX, removing all the sensitive information stored in a file");
-                Console.WriteLine();
-                Console.WriteLine("Metas:");
-                Console.WriteLine("1 - 1/5 colour equalization to remove a bit of hidden contents.");
-                Console.WriteLine("2 - 1/10 colour equalization to remove some of hidden contents.");
-                Console.WriteLine("3 - 1/20 colour equalization to remove most of hidden contents.");
-                Console.WriteLine("4 - 1/40 colour equalization to remove hidden contents at the cost of bad quality.");
-                Console.WriteLine("5 - 1/80 color equalization. You can't be serious. Hope they dont find you.");
-                Console.WriteLine();
-                Console.WriteLine("Program source code: https://github.com/kolya5544/FreeNet/tree/master/ImageRecoder");
-            } else
-            {
-                Console.WriteLine("Started...");
-                string Input = args[0];
-                string Output = args[1];
-                int Type = int.Parse(args[2]);
-                int Meta = 0;
-                if (args.Length == 4)
-                {
-                    Meta = int.Parse(args[3]);
-                }
+            var parser = new Parser(with => with.HelpWriter = null);
+            var result = parser.ParseArguments<Options>(args);
 
-                Bitmap inp = new Bitmap(Input);
-                object outp;
-                switch (Type)
-                {
-                    case 1:
-                        outp = SimpleRecode(inp, Meta);
-                        Console.WriteLine("Successfully recoded and removed metadata. Saving...");
-                        ((Bitmap)outp).Save(Output);
-                        break;
-                    case 2:
-                        outp = BMPRecode(inp, Meta);
-                        Console.WriteLine("Successfully recoded to raw RGB Bitmap with no metadata. Saving...");
-                        File.WriteAllBytes(Output, (byte[])outp);
-                        break;
-                    default:
-                        Console.WriteLine("Unknown type!");
-                        break;
-                }
+            result
+                .WithParsed(Run)
+                .WithNotParsed(_ => DisplayHelp(result));
+        }
+
+        private static void DisplayHelp(ParserResult<Options> result)
+        {
+            var helpText = HelpText.AutoBuild(result, helpText =>
+            {
+                helpText.Heading = string.Empty;
+                helpText.Copyright = string.Empty;
+                helpText.AddPreOptionsLine("Usage: program.exe <input> <output> <type> [meta]");
+                helpText.AddPostOptionsLine("Program source code: https://github.com/kolya5544/FreeNet/tree/master/ImageRecoder");
+                return HelpText.DefaultParsingErrorsHandler(result, helpText);
+            }, e => e);
+
+            Console.WriteLine(helpText);
+        }
+
+        private static void Run(Options options)
+        {
+            Console.WriteLine("Started...");
+
+            Bitmap inp = new Bitmap(options.Input);
+            object outp;
+            switch (options.Type)
+            {
+                case ProcessingType.One:
+                    outp = SimpleRecode(inp, options.Meta);
+                    Console.WriteLine("Successfully recoded and removed metadata. Saving...");
+                    ((Bitmap)outp).Save(options.Output);
+                    break;
+                case ProcessingType.Two:
+                    outp = BMPRecode(inp, options.Meta);
+                    Console.WriteLine("Successfully recoded to raw RGB Bitmap with no metadata. Saving...");
+                    File.WriteAllBytes(options.Output, (byte[])outp);
+                    break;
+                default:
+                    Console.WriteLine("Unknown type!");
+                    break;
             }
         }
 
-        public static Bitmap SimpleRecode(Bitmap bmp, int meta)
+        public static Bitmap SimpleRecode(Bitmap bmp, Meta meta)
         {
             var bitmap = new Bitmap(bmp.Width, bmp.Height);
             for (int y = 0; y < bmp.Height; y++)
@@ -73,7 +72,7 @@ namespace ImageRecoder
             return bitmap;
         }
 
-        public static byte[] BMPRecode(Bitmap bmp, int meta)
+        public static byte[] BMPRecode(Bitmap bmp, Meta meta)
         {
             MemoryStream ms = new MemoryStream();
             Baker.BMHeader(ms);
@@ -105,23 +104,20 @@ namespace ImageRecoder
             return o;
         }
 
-        private static void ApplyMeta(ref Color c, int meta)
+        private static void ApplyMeta(ref Color c, Meta meta)
         {
-            if (meta == 0) return;
-            int Ratio = 0;
-            switch (meta)
+            if (meta == Meta.NoPostProcessing) return;
+
+            int Ratio = meta switch
             {
-                case 1:
-                    Ratio = 5; break;
-                case 2:
-                    Ratio = 10; break;
-                case 3:
-                    Ratio = 20; break;
-                case 4:
-                    Ratio = 40; break;
-                case 5:
-                    Ratio = 80; break;
-            }
+                Meta.OneFifth => 5,
+                Meta.OneTenth => 10,
+                Meta.OneTwentieth => 20,
+                Meta.OneFortieth => 40,
+                Meta.OneEightieth => 80,
+                _ => throw new ApplicationException($"Meta value {meta} hasn't been implemented, please contact @kolya5544")
+            };
+
             int R = c.R;
             int G = c.G;
             int B = c.B;
