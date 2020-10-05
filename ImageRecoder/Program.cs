@@ -9,6 +9,8 @@ namespace ImageRecoder
 {
     class Program
     {
+        public static Random rng = new Random();
+
         static void Main(string[] args)
         {
             var parser = new Parser(with => with.HelpWriter = null);
@@ -38,6 +40,12 @@ namespace ImageRecoder
             Console.WriteLine("Started...");
 
             Bitmap inp = new Bitmap(options.Input);
+
+            if (options.Meta == Meta.RandomResize)
+            {
+                ApplyRandomResize(ref inp);
+            }
+
             object outp;
             switch (options.Type)
             {
@@ -57,6 +65,39 @@ namespace ImageRecoder
             }
         }
 
+        /// <summary>
+        /// Applies a random resize ranging from -20 to +20 percent off original size (N = N + N * Perc, where Perc is [-0.20, 0.20) ).
+        /// </summary>
+        /// <param name="inp">Bitmap to apply a resize to</param>
+        private static void ApplyRandomResize(ref Bitmap inp)
+        {
+            int NewW, NewH;
+
+            double WPerc = (double)rng.Next(-20, 20) / 100; double HPerc = (double)rng.Next(-20, 20) / 100;
+
+            NewW = (int)Math.Round(inp.Width + inp.Width * WPerc); NewH = (int)Math.Round(inp.Height + inp.Height * HPerc);
+
+            Bitmap bmp = new Bitmap(NewW, NewH);
+            Graphics g = Graphics.FromImage(bmp);
+
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+            g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+            g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+            g.DrawImage(inp, new Rectangle(Point.Empty, new Size(NewW, NewH)));
+
+            inp = new Bitmap(bmp);
+            bmp.Dispose();
+        }
+
+        /// <summary>
+        /// Manually copies all the pixels to the new Bitmap, applying a chosen meta
+        /// </summary>
+        /// <param name="bmp">Bitmap to copy pixels from</param>
+        /// <param name="meta">Meta to apply</param>
+        /// <returns>New bitmap with meta applied to every pixel.</returns>
         public static Bitmap SimpleRecode(Bitmap bmp, Meta meta)
         {
             var bitmap = new Bitmap(bmp.Width, bmp.Height);
@@ -72,6 +113,12 @@ namespace ImageRecoder
             return bitmap;
         }
 
+        /// <summary>
+        /// Creates an RGB 24-bit no encoding BMP image as a byte array out of a Bitmap, applying meta to every pixel
+        /// </summary>
+        /// <param name="bmp">Bitmap to convert to raw BMP image</param>
+        /// <param name="meta">Meta to apply to every pixel</param>
+        /// <returns>Byte array representation of a BMP image</returns>
         public static byte[] BMPRecode(Bitmap bmp, Meta meta)
         {
             MemoryStream ms = new MemoryStream();
@@ -104,9 +151,14 @@ namespace ImageRecoder
             return o;
         }
 
+        /// <summary>
+        /// Applies specified meta to a colour
+        /// </summary>
+        /// <param name="c">Colour to apply meta for</param>
+        /// <param name="meta">Meta to apply</param>
         private static void ApplyMeta(ref Color c, Meta meta)
         {
-            if (meta == Meta.NoPostProcessing) return;
+            if (meta == Meta.NoPostProcessing || meta == Meta.RandomResize) return;
 
             if (meta != Meta.BlackWhite)
             {
@@ -137,6 +189,10 @@ namespace ImageRecoder
             }
         }
     }
+
+    /// <summary>
+    /// A class to work with raw BMP
+    /// </summary>
     public class Baker
     {
         private static byte[] IDField = { 0x42, 0x4D }; //"BM"

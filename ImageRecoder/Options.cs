@@ -16,7 +16,8 @@ namespace ImageRecoder
         OneTwentieth,
         OneFortieth,
         OneEightieth,
-        BlackWhite
+        BlackWhite,
+        RandomResize
     }
 
     public class Options
@@ -39,7 +40,8 @@ namespace ImageRecoder
 3 - 1/20 colour equalization to remove most of hidden contents.
 4 - 1/40 colour equalization to remove hidden contents at the cost of bad quality.
 5 - 1/80 colour equalization. You can't be serious. Hope they dont find you.
-6 - Colour to black/white.")]
+6 - Colour to black/white.
+7 - Resizes the picture by random amount of pixels to hide camera/phone model used to take the picture. (Best for pictures bigger than 100x100)")]
         public Meta Meta { get; set; }
     }
 }
