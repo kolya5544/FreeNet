@@ -25,9 +25,7 @@ namespace ImageRecoder
         {
             var helpText = HelpText.AutoBuild(result, helpText =>
             {
-                helpText.Heading = string.Empty;
-                helpText.Copyright = string.Empty;
-                helpText.AddPreOptionsLine("Usage: program.exe <input> <output> <type> [meta]");
+                helpText.AddPreOptionsLine("Usage: program.exe <input> <output> --type <type> [-- meta <meta>]");
                 helpText.AddPostOptionsLine("Program source code: https://github.com/kolya5544/FreeNet/tree/master/ImageRecoder");
                 return HelpText.DefaultParsingErrorsHandler(result, helpText);
             }, e => e);
@@ -130,7 +128,7 @@ namespace ImageRecoder
             Baker.FileSizeHeader(ms, BMPSize);
             //Application specific header. It will be...
             Baker.IKTMHeader(ms, new byte[] { 0x00, 0x00, 0x00, 0x00 }); //There was an "IKTM" header but now just zeroes
-                                          //Static offset of pixel data.
+                                                                         //Static offset of pixel data.
             Baker.PixelOffsetHeader(ms);
             //DIB header, fully handled by one function (it's mostly static.)
             Baker.DIB(ms, bmp.Width, bmp.Height);
@@ -179,7 +177,8 @@ namespace ImageRecoder
                 int NewG = (G / Ratio) * Ratio;
                 int NewB = (B / Ratio) * Ratio;
                 c = Color.FromArgb(c.A, NewR, NewG, NewB);
-            } else
+            }
+            else
             {
                 double Colour = c.R * 0x10000 + c.G * 0x100 + c.B;
                 double BWpercentage = Colour / 0xFFFFFF;
