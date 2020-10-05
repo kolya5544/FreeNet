@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ImageRecoder": {
-      "commandName": "Project",
-      "commandLineArgs": ".\\test2.jpg hi.bmp 2 6"
-    }
-  }
-}
