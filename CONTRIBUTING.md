@@ -6,7 +6,8 @@ We currently accept minor fixes and program improvements. This project is mostly
 
 | Name | Status and PRs |
 | - | - |
-| kolya5544 | **Founder** |
+| [kolya5544](https://github.com/kolya5544) | **Founder** |
+| [eduherminio](https://github.com/eduherminio) | Contributor: #2 |
 
 ## Info
 
