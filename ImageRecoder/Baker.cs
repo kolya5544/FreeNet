@@ -9,9 +9,9 @@ namespace ImageRecoder
     /// </summary>
     public static class Baker
     {
-        private readonly static byte[] IDField = { 0x42, 0x4D }; //"BM"
-        private readonly static byte[] DataOffset = { 0x36, 0x00, 0x00, 0x00 }; //54.
-        private readonly static byte[] DIBNumber = { 0x28, 0x00, 0x00, 0x00 }; //40.
+        private readonly static byte[] IDField = { 0x42, 0x4D }; //"BM". BMP magic.
+        private readonly static byte[] DataOffset = { 0x36, 0x00, 0x00, 0x00 }; //54. Shows the location of pixel data
+        private readonly static byte[] DIBNumber = { 0x28, 0x00, 0x00, 0x00 }; //40. DIB header size in bytes
         private readonly static byte[] DIB_MagicBytes_1 = {
             0x01, 0x00,//plane amount
             0x18, 0x00,//Bits per pixel.
@@ -66,7 +66,7 @@ namespace ImageRecoder
         /// <summary>
         /// Writes offset to pixel array to the file.
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="s">Stream to write pixel offset to</param>
         public static void PixelOffsetHeader(Stream s)
         {
             s.Write(DataOffset);
@@ -74,9 +74,9 @@ namespace ImageRecoder
         /// <summary>
         /// Manages DIB header creation
         /// </summary>
-        /// <param name="s"></param>
-        /// <param name="w"></param>
-        /// <param name="h"></param>
+        /// <param name="s">Stream to write DIB header to</param>
+        /// <param name="w">Width of the BMP</param>
+        /// <param name="h">Height of the BMP</param>
         public static void DIB(Stream s, int w, int h)
         {
             s.Write(DIBNumber);

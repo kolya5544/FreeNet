@@ -13,9 +13,9 @@ The program is powerful enough to remove metadata, "invisible" trackers, make pi
 ### Usage
 
 ```bash
-$ dotnet ImageRecoder.dll [input-file] [output-file] [type] [meta] 
+$ dotnet ImageRecoder.dll <input> <output> --type <type> [--meta <meta>]
 
-Example: dotnet ImageRecoder.dll file.png output.png 1 2
+Example: dotnet ImageRecoder.dll file.png output.png --type 1 --meta 2
 ```
 
 Types:
