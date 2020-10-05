@@ -4,8 +4,8 @@ namespace ImageRecoder
 {
     public enum ProcessingType
     {
-        One,
-        Two
+        One = 1,
+        Two = 2
     }
 
     public enum Meta
@@ -15,7 +15,8 @@ namespace ImageRecoder
         OneTenth,
         OneTwentieth,
         OneFortieth,
-        OneEightieth
+        OneEightieth,
+        BlackWhite
     }
 
     public class Options
@@ -37,7 +38,8 @@ namespace ImageRecoder
 2 - 1/10 colour equalization to remove some of hidden contents.
 3 - 1/20 colour equalization to remove most of hidden contents.
 4 - 1/40 colour equalization to remove hidden contents at the cost of bad quality.
-5 - 1/80 colour equalization. You can't be serious. Hope they dont find you.")]
+5 - 1/80 colour equalization. You can't be serious. Hope they dont find you.
+6 - Colour to black/white.")]
         public Meta Meta { get; set; }
     }
 }
