@@ -33,16 +33,18 @@ Meta defines the post-processing additional application to the picture's content
 3. 1/20 color equalization. Powerful enough to fit most of cases
 4. 1/40 color equalization. Basically ensures no trackers. Good enough to make a picture unrecognizable to Google Image Search
 5. 1/80 color equalization. If the quality of the picture doesnt matter, you can try this.
+6. Colour to black and white. Pretty self-explanatory.
+7. Resizes a picture by a random amount of pixels ranging from -20 to +20 percents off original size. Used to prevent identification of a camera/phone used by resolution of a picture.
 
 (see Exceptions)
 
 ### Exceptions
 
-The program is not able to remove watermarks, it doesn't hide faces on photos. The resolution of the photos can still be used to find out the device used to shot a picture. 
+The program is not able to remove watermarks, it doesn't hide faces on photos. The resolution of the photos can still be used to find out the device used to shot a picture (not with resize meta tho). The program does not "protect" a file - after processing, trackers still **can** be put inside of a file.
 
 Obvious identification trackers are also not removed (such as, a picture of your ID is enough to identify you, even if you process a picture with this program). 
 
-Colour equalization is NOT guaranteed to make a picture unrecognizabl to Google Image Search, it depends wildly on a picture.
+Colour equalization is NOT guaranteed to make a picture unrecognizable to Google Image Search, it depends wildly on a picture. Resizing only effectively works for large pictures, more than 1000x1000. Using it will decrease the quality of a picture
 
 Trackers CAN be hidden inside second type raw BMP file using a technique described in [imageEncryptor](https://github.com/kolya5544/imageEncryptor), but the program does remove those as well.
 
