@@ -82,7 +82,7 @@ namespace ImageRecoder
                                 54; //54 bytes is the length of the whole header part.
             Baker.FileSizeHeader(ms, BMPSize);
             //Application specific header. It will be...
-            Baker.IKTMHeader(ms, "IKTM"); //IKTM
+            Baker.IKTMHeader(ms, new byte[] { 0x00, 0x00, 0x00, 0x00 }); //There was an "IKTM" header but now just zeroes
                                           //Static offset of pixel data.
             Baker.PixelOffsetHeader(ms);
             //DIB header, fully handled by one function (it's mostly static.)
@@ -108,23 +108,33 @@ namespace ImageRecoder
         {
             if (meta == Meta.NoPostProcessing) return;
 
-            int Ratio = meta switch
+            if (meta != Meta.BlackWhite)
             {
-                Meta.OneFifth => 5,
-                Meta.OneTenth => 10,
-                Meta.OneTwentieth => 20,
-                Meta.OneFortieth => 40,
-                Meta.OneEightieth => 80,
-                _ => throw new ApplicationException($"Meta value {meta} hasn't been implemented, please contact @kolya5544")
-            };
+                int Ratio = meta switch
+                {
+                    Meta.OneFifth => 5,
+                    Meta.OneTenth => 10,
+                    Meta.OneTwentieth => 20,
+                    Meta.OneFortieth => 40,
+                    Meta.OneEightieth => 80,
+                    _ => throw new ApplicationException($"Meta value {meta} hasn't been implemented, please contact @kolya5544")
+                };
 
-            int R = c.R;
-            int G = c.G;
-            int B = c.B;
-            int NewR = (R / Ratio) * Ratio;
-            int NewG = (G / Ratio) * Ratio;
-            int NewB = (B / Ratio) * Ratio;
-            c = Color.FromArgb(c.A, NewR, NewG, NewB);
+                int R = c.R;
+                int G = c.G;
+                int B = c.B;
+                int NewR = (R / Ratio) * Ratio;
+                int NewG = (G / Ratio) * Ratio;
+                int NewB = (B / Ratio) * Ratio;
+                c = Color.FromArgb(c.A, NewR, NewG, NewB);
+            } else
+            {
+                double Colour = c.R * 0x10000 + c.G * 0x100 + c.B;
+                double BWpercentage = Colour / 0xFFFFFF;
+                int BW = (int)Math.Round(BWpercentage * 255);
+
+                c = Color.FromArgb(BW, BW, BW);
+            }
         }
     }
     public class Baker
