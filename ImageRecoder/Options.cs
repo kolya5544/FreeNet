@@ -28,12 +28,12 @@ namespace ImageRecoder
         [Value(1, MetaName = "output", Required = true, HelpText = "Output file path.")]
         public string Output { get; set; }
 
-        [Value(2, MetaName = "type", Required = true, HelpText = @"
+        [Option(shortName: 't', longName: "type", Required = true, HelpText = @"
 1 - Takes the picture and saves it, removing most of metadata or byte hidden contents.
 2 - Takes the picture and saves it to raw BMP HEX, removing all the sensitive information stored in a file.")]
         public ProcessingType Type { get; set; }
 
-        [Value(3, MetaName = "meta", Required = false, Default = Meta.NoPostProcessing, HelpText = @"
+        [Option(shortName: 'm', longName: "meta", Required = false, Default = Meta.NoPostProcessing, HelpText = @"
 [0] - No post-processing
 1 - 1/5 colour equalization to remove a bit of hidden contents.
 2 - 1/10 colour equalization to remove some of hidden contents.

@@ -2,7 +2,7 @@
   "profiles": {
     "ImageRecoder": {
       "commandName": "Project",
-      "commandLineArgs": ".\\test2.jpg hi.bmp 2 7"
+      "commandLineArgs": ".\\test2.jpg hi.bmp --type 2 --meta 7"
     }
   }
 }

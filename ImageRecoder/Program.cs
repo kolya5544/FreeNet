@@ -20,9 +20,7 @@ namespace ImageRecoder
         {
             var helpText = HelpText.AutoBuild(result, helpText =>
             {
-                helpText.Heading = string.Empty;
-                helpText.Copyright = string.Empty;
-                helpText.AddPreOptionsLine("Usage: program.exe <input> <output> <type> [meta]");
+                helpText.AddPreOptionsLine("Usage: program.exe <input> <output> --type <type> [--meta <meta>]");
                 helpText.AddPostOptionsLine("Program source code: https://github.com/kolya5544/FreeNet/tree/master/ImageRecoder");
                 return HelpText.DefaultParsingErrorsHandler(result, helpText);
             }, e => e);
