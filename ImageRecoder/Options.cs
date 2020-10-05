@@ -22,10 +22,10 @@ namespace ImageRecoder
 
     public class Options
     {
-        [Value(0, MetaName = "input", Required = true, HelpText = "Input file path.")]
+        [Value(0, MetaName = "input", Required = true, HelpText = "Input file or folder path.")]
         public string Input { get; set; }
 
-        [Value(1, MetaName = "output", Required = true, HelpText = "Output file path.")]
+        [Value(1, MetaName = "output", Required = true, HelpText = "Output file or folder path.")]
         public string Output { get; set; }
 
         [Option(shortName: 't', longName: "type", Required = true, HelpText = @"

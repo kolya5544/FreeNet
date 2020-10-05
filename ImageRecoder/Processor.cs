@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Linq;
 
 namespace ImageRecoder
 {
@@ -17,29 +19,52 @@ namespace ImageRecoder
         {
             Console.WriteLine("Started...");
 
-            Bitmap inp = new Bitmap(options.Input);
+            bool isFolder = Directory.Exists(options.Input);
 
-            if (options.Meta == Meta.RandomResize)
+            List<string> filesToProcess = new List<string>();
+
+            if (isFolder)
             {
-                ApplyRandomResize(ref inp);
+                filesToProcess = Directory.EnumerateFiles(options.Input, "*", SearchOption.AllDirectories).ToList();
+                Console.Write($"A folder was chosen. {filesToProcess.Count} files were found. Do you want to continue? (Y/N):");
+                bool answ = Console.ReadLine().ToUpper() == "Y";
+                if (!answ) return;
+            } else
+            {
+                filesToProcess.Add(options.Input);
             }
 
-            object outp;
-            switch (options.Type)
+            foreach (string file in filesToProcess)
             {
-                case ProcessingType.One:
-                    outp = SimpleRecode(inp, options.Meta);
-                    Console.WriteLine("Successfully recoded and removed metadata. Saving...");
-                    ((Bitmap)outp).Save(options.Output);
-                    break;
-                case ProcessingType.Two:
-                    outp = BMPRecode(inp, options.Meta);
-                    Console.WriteLine("Successfully recoded to raw RGB Bitmap with no metadata. Saving...");
-                    File.WriteAllBytes(options.Output, (byte[])outp);
-                    break;
-                default:
-                    Console.WriteLine("Unknown type!");
-                    break;
+                Bitmap inp = new Bitmap(file);
+
+                if (options.Meta == Meta.RandomResize)
+                {
+                    ApplyRandomResize(ref inp);
+                }
+
+                string relativePath = Path.GetRelativePath(Environment.CurrentDirectory, file);
+                string fileName = Path.GetFileName(relativePath);
+                string outputFilename = isFolder ? $"{options.Output}\\{relativePath.Remove(0, options.Input.Length + 1)}" : $"{options.Output}";
+                if (isFolder) Directory.CreateDirectory(Path.GetDirectoryName(outputFilename));
+
+                object outp;
+                switch (options.Type)
+                {
+                    case ProcessingType.One:
+                        outp = SimpleRecode(inp, options.Meta);
+                        Console.WriteLine($"Successfully recoded {relativePath} and removed metadata. Saving to {outputFilename}");
+                        ((Bitmap)outp).Save(outputFilename);
+                        break;
+                    case ProcessingType.Two:
+                        outp = BMPRecode(inp, options.Meta);
+                        Console.WriteLine($"Successfully recoded {relativePath} to raw RGB Bitmap with no metadata. Saving to {outputFilename}");
+                        File.WriteAllBytes(outputFilename, (byte[])outp);
+                        break;
+                    default:
+                        Console.WriteLine("Unknown type!");
+                        break;
+                }
             }
         }
 
