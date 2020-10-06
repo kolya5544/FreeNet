@@ -25,6 +25,7 @@ namespace ImageRecoder
 
             if (isFolder)
             {
+                if (!Directory.Exists(options.Output)) throw new ArgumentException("If input is a folder, output should be a folder as well");
                 filesToProcess = Directory.EnumerateFiles(options.Input, "*", SearchOption.AllDirectories).ToList();
                 Console.Write($"A folder was chosen. {filesToProcess.Count} files were found. Do you want to continue? (Y/N):");
                 bool answ = Console.ReadLine().ToUpper() == "Y";
