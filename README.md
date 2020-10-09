@@ -76,5 +76,7 @@ Never send or show anyone a `key to encrypt messages`. It may be used by anyone 
 
 [Contributing information](https://github.com/kolya5544/FreeNet/blob/master/CONTRIBUTING.md)
 
-## License
-[AGPL-3.0 License](https://github.com/kolya5544/FreeNet/blob/master/LICENSE)
+## Licenses and notices
+[FreeNet - AGPL-3.0 License](https://github.com/kolya5544/FreeNet/blob/master/LICENSE)
+[.NET Standard System.Drawing - MIT](https://github.com/dotnet/standard/blob/master/LICENSE.TXT)
+[CommandLineParser - MIT](https://github.com/commandlineparser/commandline/blob/master/License.md)
